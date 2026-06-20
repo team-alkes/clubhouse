@@ -1,3 +1,1 @@
-"# clubhouse" 
-"# clubhouse" 
-"# clubhouse" 
+This is the repo for the static page that lists links to .cbz files for Star Blossom. Hello!
