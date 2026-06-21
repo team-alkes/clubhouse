@@ -13,6 +13,7 @@
 
         .pagecounter {
             display: inline-block;
+            transform:scale(0.7);
             transform-origin: center;
         }
     </style>
@@ -20,7 +21,7 @@
 
 <script> //dont look at this
     (function () {
-        var API = "https://hitscounter.dev/api/hit?output=json&url=https://team-alkes.github.io/clubhouse/";
+        var API = "https://hitscounter.dev/api/hit?output=json&url=https://team-alkes.github.io/clubh";
 
         fetch(API)
             .then(function (r) { return r.json(); })
