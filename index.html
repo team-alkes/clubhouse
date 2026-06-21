@@ -4,34 +4,34 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf8">
     <title>Team Alkes Clubhouse</title>
     <style>
-        .pagecounter{
-            display: inline-block;
-            transform:scale(0.7);
-            transform-origin:center;
+        .pagecounter img {
+            display: block;
+            float: left;
+            margin: 0;
+            padding: 0;
         }
-        .pagecounter img{
-            dispaly:block;
-            float:left;
-            margin:0;
-            padding:0;
+
+        .pagecounter {
+            display: inline-block;
+            transform-origin: center;
         }
     </style>
 </head>
 
 <script> //dont look at this
-(function () {
-  var API = "https://hitscounter.dev/api/hit?output=json&url=https://team-alkes.github.io/clubhouse/";
+    (function () {
+        var API = "https://hitscounter.dev/api/hit?output=json&url=https://team-alkes.github.io/clubhous/";
 
-  fetch(API)
-    .then(function (r) { return r.json(); })
-    .then(function (data) {
-      var digits = String(data.total_hits).padStart(6, "0").split("");
-      var imgs = document.querySelectorAll(".pagecounter .digit");
-      digits.forEach(function (d, i) {
-        imgs[i].src = "images/pagecounter/" + d + ".gif";
-      });
-    })
-})();
+        fetch(API)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var digits = String(data.total_hits).padStart(6, "0").split("");
+                var imgs = document.querySelectorAll(".pagecounter .digit");
+                digits.forEach(function (d, i) {
+                    imgs[i].src = "images/pagecounter/" + d + ".gif";
+                });
+            })
+    })();
 </script>
 
 <body bgcolor=#fcd2da text="#f56984" background="images/bg_sakura.gif">
@@ -64,7 +64,7 @@
     </p>
     <div align="center">
         <div class="pagecounter" align="center">
-            <img src="images/pagecounter/left.gif">\
+            <img src="images/pagecounter/left.gif">
             <img class="digit" src="images/pagecounter/0.gif">
             <img class="digit" src="images/pagecounter/0.gif">
             <img class="digit" src="images/pagecounter/0.gif">
