@@ -1,8 +1,39 @@
 <html>
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf8">
     <title>Team Alkes Clubhouse</title>
+    <style>
+        .pagecounter{
+            display: inline-block;
+            transform:scale(0.7);
+            transform-origin:center;
+        }
+        .pagecounter img{
+            dispaly:block;
+            float:left;
+            margin:0;
+            padding:0;
+        }
+    </style>
 </head>
+
+<script> //dont look at this
+(function () {
+  var API = "https://hitscounter.dev/api/hit?output=json&url=https://team-alkes.github.io/clubhouse/";
+
+  fetch(API)
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var digits = String(data.total_hits).padStart(6, "0").split("");
+      var imgs = document.querySelectorAll(".pagecounter .digit");
+      digits.forEach(function (d, i) {
+        imgs[i].src = "images/pagecounter/" + d + ".gif";
+      });
+    })
+})();
+</script>
+
 <body bgcolor=#fcd2da text="#f56984" background="images/bg_sakura.gif">
     <p align="center">
         <a href="link.html">
@@ -12,7 +43,8 @@
     <p align="center">
         <b>
             <i>
-                <font size=6>~Team Alkes Clubhouse~</font> </i>
+                <font size=6>~Team Alkes Clubhouse~</font>
+            </i>
         </b>
     </p>
     <p align="center">
@@ -30,89 +62,102 @@
     <p align="center">
         <img src="images/div1.gif" alt="">
     </p>
+    <div align="center">
+        <div class="pagecounter" align="center">
+            <img src="images/pagecounter/left.gif">\
+            <img class="digit" src="images/pagecounter/0.gif">
+            <img class="digit" src="images/pagecounter/0.gif">
+            <img class="digit" src="images/pagecounter/0.gif">
+            <img class="digit" src="images/pagecounter/0.gif">
+            <img class="digit" src="images/pagecounter/0.gif">
+            <img class="digit" src="images/pagecounter/0.gif">
+            <img src="images/pagecounter/right.gif">
+        </div>
+    </div>
 </body>
 <script> //dont look in here. be free. its 1995 bro. don't worry about it.
-(function(){
-  const SPEED = 1;
+    (function () {
+        const SPEED = 3;
 
-  function pixelLoad(img){
-    if(!img.classList.contains('pixel')) return;
-    const run = () => animate(img);
-    if(img.complete && img.naturalWidth) run();
-    else img.addEventListener('load', run, {once:true});
-  }
-
-  function animate(img){
-    const W = img.naturalWidth, H = img.naturalHeight;
-    if(!W || !H) return;
-
-    const rect  = img.getBoundingClientRect();
-    const dispW = rect.width  || W;
-    const dispH = rect.height || H;
-
-    const cv = document.createElement('canvas');
-    cv.width = W; cv.height = H;
-    cv.style.width  = dispW + 'px';
-    cv.style.height = dispH + 'px';
-    cv.style.imageRendering = 'pixelated';
-    cv.style.verticalAlign = 'bottom';
-
-    const prevDisplay = img.style.display;
-    img.parentNode.insertBefore(cv, img);
-    img.style.display = 'none';
-
-    const ctx  = cv.getContext('2d');
-    const off  = document.createElement('canvas');
-    const octx = off.getContext('2d');
-
-    let pct = 0;
-    const t0 = performance.now();
-    let nextStall  = (1500 + Math.random()*1500) * SPEED;
-    let stallUntil = 0;
-
-    function draw(p){
-      const rows = Math.round(H * p/100);
-      const f = p < 60 ? 0.5 : 1;                  
-      const sw = Math.max(1, Math.round(W*f));
-      const sh = Math.max(1, Math.round(H*f));
-      off.width = sw; off.height = sh;
-      octx.imageSmoothingEnabled = false;
-      octx.clearRect(0,0,sw,sh);
-      octx.drawImage(img, 0,0, sw, sh);
-      ctx.imageSmoothingEnabled = false;
-      ctx.clearRect(0,0,W,H);
-      if(rows > 0){
-        const srcRows = Math.round(sh * p/100);
-        ctx.drawImage(off, 0,0, sw, srcRows, 0,0, W, rows);
-      }
-    }
-
-    function frame(now){
-      if(pct < 100){
-        if(now >= stallUntil){
-          const ramp = pct < 8 ? 0.25 : 1;
-          pct += (0.10 + Math.random()*0.55) * ramp / SPEED;
-          if(pct > 100) pct = 100;
-          if(now - t0 > nextStall){
-            stallUntil = now + (300 + Math.random()*1400)*SPEED;
-            nextStall  = (now - t0) + (1500 + Math.random()*2500)*SPEED;
-          }
+        function pixelLoad(img) {
+            if (!img.classList.contains('pixel')) return;
+            const run = () => animate(img);
+            if (img.complete && img.naturalWidth) run();
+            else img.addEventListener('load', run, { once: true });
         }
-      }
-      draw(pct);
-      if(pct >= 100){
-        cv.remove();
-        img.style.display = prevDisplay;
-        return;
-      }
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('img').forEach(pixelLoad);
-  });
-})();
+        function animate(img) {
+            const W = img.naturalWidth, H = img.naturalHeight;
+            if (!W || !H) return;
+
+            const rect = img.getBoundingClientRect();
+            const dispW = rect.width || W;
+            const dispH = rect.height || H;
+
+            const cv = document.createElement('canvas');
+            cv.width = W; cv.height = H;
+            cv.style.width = dispW + 'px';
+            cv.style.height = dispH + 'px';
+            cv.style.imageRendering = 'pixelated';
+            cv.style.verticalAlign = 'bottom';
+
+            const prevDisplay = img.style.display;
+            img.parentNode.insertBefore(cv, img);
+            img.style.display = 'none';
+
+            const ctx = cv.getContext('2d');
+            const off = document.createElement('canvas');
+            const octx = off.getContext('2d');
+
+            let pct = 0;
+            const t0 = performance.now();
+            let nextStall = (1500 + Math.random() * 1500) * SPEED;
+            let stallUntil = 0;
+
+            function draw(p) {
+                const rows = Math.round(H * p / 100);
+                const f = p < 60 ? 0.5 : 1;
+                const sw = Math.max(1, Math.round(W * f));
+                const sh = Math.max(1, Math.round(H * f));
+                off.width = sw; off.height = sh;
+                octx.imageSmoothingEnabled = false;
+                octx.clearRect(0, 0, sw, sh);
+                octx.drawImage(img, 0, 0, sw, sh);
+                ctx.imageSmoothingEnabled = false;
+                ctx.clearRect(0, 0, W, H);
+                if (rows > 0) {
+                    const srcRows = Math.round(sh * p / 100);
+                    ctx.drawImage(off, 0, 0, sw, srcRows, 0, 0, W, rows);
+                }
+            }
+
+            function frame(now) {
+                if (pct < 100) {
+                    if (now >= stallUntil) {
+                        const ramp = pct < 8 ? 0.25 : 1;
+                        pct += (0.10 + Math.random() * 0.55) * ramp / SPEED;
+                        if (pct > 100) pct = 100;
+                        if (now - t0 > nextStall) {
+                            stallUntil = now + (300 + Math.random() * 1400) * SPEED;
+                            nextStall = (now - t0) + (1500 + Math.random() * 2500) * SPEED;
+                        }
+                    }
+                }
+                draw(pct);
+                if (pct >= 100) {
+                    cv.remove();
+                    img.style.display = prevDisplay;
+                    return;
+                }
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('img').forEach(pixelLoad);
+        });
+    })();
 </script>
+
 </html>
