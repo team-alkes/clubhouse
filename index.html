@@ -13,8 +13,19 @@
 
         .pagecounter {
             display: inline-block;
-            transform:scale(0.7);
+            transform: scale(0.7);
             transform-origin: center;
+        }
+
+        img.pixel {
+            --progress: 0%;
+            clip-path: inset(0 0 calc(100% - var(--progress)) 0);
+            image-rendering: pixelated; 
+        }
+
+        img.pixel.done {
+            clip-path: none;
+            image-rendering: auto;
         }
     </style>
 </head>
@@ -76,87 +87,36 @@
         </div>
     </div>
 </body>
+
 <script> //dont look in here. be free. its 1995 bro. don't worry about it.
     (function () {
-        const SPEED = 3;
-
-        function pixelLoad(img) {
+        function simulateDialUp(img) {
             if (!img.classList.contains('pixel')) return;
-            const run = () => animate(img);
-            if (img.complete && img.naturalWidth) run();
-            else img.addEventListener('load', run, { once: true });
-        }
 
-        function animate(img) {
-            const W = img.naturalWidth, H = img.naturalHeight;
-            if (!W || !H) return;
-
-            const rect = img.getBoundingClientRect();
-            const dispW = rect.width || W;
-            const dispH = rect.height || H;
-
-            const cv = document.createElement('canvas');
-            cv.width = W; cv.height = H;
-            cv.style.width = dispW + 'px';
-            cv.style.height = dispH + 'px';
-            cv.style.imageRendering = 'pixelated';
-            cv.style.verticalAlign = 'bottom';
-
-            const prevDisplay = img.style.display;
-            img.parentNode.insertBefore(cv, img);
-            img.style.display = 'none';
-
-            const ctx = cv.getContext('2d');
-            const off = document.createElement('canvas');
-            const octx = off.getContext('2d');
-
-            let pct = 0;
-            const t0 = performance.now();
-            let nextStall = (1500 + Math.random() * 1500) * SPEED;
-            let stallUntil = 0;
-
-            function draw(p) {
-                const rows = Math.round(H * p / 100);
-                const f = p < 60 ? 0.5 : 1;
-                const sw = Math.max(1, Math.round(W * f));
-                const sh = Math.max(1, Math.round(H * f));
-                off.width = sw; off.height = sh;
-                octx.imageSmoothingEnabled = false;
-                octx.clearRect(0, 0, sw, sh);
-                octx.drawImage(img, 0, 0, sw, sh);
-                ctx.imageSmoothingEnabled = false;
-                ctx.clearRect(0, 0, W, H);
-                if (rows > 0) {
-                    const srcRows = Math.round(sh * p / 100);
-                    ctx.drawImage(off, 0, 0, sw, srcRows, 0, 0, W, rows);
+            let progress = 0;
+            
+            function downloadChunk() {
+                progress += Math.random() * 6 + 1; 
+                if (progress >= 100) progress = 100;
+                
+                img.style.setProperty('--progress', `${progress}%`);
+                
+                if (progress < 100) {
+                    setTimeout(downloadChunk, Math.random() * 950 + 50);
+                } else {
+                    img.classList.add('done');
                 }
             }
-
-            function frame(now) {
-                if (pct < 100) {
-                    if (now >= stallUntil) {
-                        const ramp = pct < 8 ? 0.25 : 1;
-                        pct += (0.10 + Math.random() * 0.55) * ramp / SPEED;
-                        if (pct > 100) pct = 100;
-                        if (now - t0 > nextStall) {
-                            stallUntil = now + (300 + Math.random() * 1400) * SPEED;
-                            nextStall = (now - t0) + (1500 + Math.random() * 2500) * SPEED;
-                        }
-                    }
-                }
-                draw(pct);
-                if (pct >= 100) {
-                    cv.remove();
-                    img.style.display = prevDisplay;
-                    return;
-                }
-                requestAnimationFrame(frame);
+            
+            if (img.complete && img.naturalWidth) {
+                downloadChunk();
+            } else {
+                img.addEventListener('load', downloadChunk, { once: true });
             }
-            requestAnimationFrame(frame);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('img').forEach(pixelLoad);
+            document.querySelectorAll('img').forEach(simulateDialUp);
         });
     })();
 </script>
